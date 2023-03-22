@@ -7,6 +7,10 @@ import misc.Misc;
  */
 public class Colors {
     /**
+     * Цвет сетки
+     */
+    public static final int TASK_GRID_COLOR = Misc.getColor(64, 255, 255, 255);
+    /**
      * Цвет пересечения
      */
     public static final int CROSSED_COLOR = Misc.getColor(200, 0, 255, 255);
