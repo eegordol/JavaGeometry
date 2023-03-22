@@ -274,6 +274,20 @@ public class Task {
         }
         canvas.restore();
     }
+    /**
+     * Рисование
+     *
+     * @param canvas   область рисования
+     * @param windowCS СК окна
+     */
+    public void paint(Canvas canvas, CoordinateSystem2i windowCS) {
+        // Сохраняем последнюю СК
+        lastWindowCS = windowCS;
+        // рисуем координатную сетку
+        renderGrid(canvas, lastWindowCS);
+        // рисуем задачу
+        renderTask(canvas, windowCS);
+    }
 
 
 }
