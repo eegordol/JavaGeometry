@@ -10,6 +10,7 @@ import io.github.humbleui.jwm.Window;
 import io.github.humbleui.skija.Canvas;
 import misc.CoordinateSystem2d;
 import misc.CoordinateSystem2i;
+import misc.Stats;
 import misc.Vector2d;
 
 import java.io.File;
@@ -24,6 +25,10 @@ import static app.Fonts.FONT12;
  * Панель рисования
  */
 public class PanelRendering extends GridPanel {
+    /**
+     * Статистика fps
+     */
+    private final Stats fpsStats;
     /**
      * Представление проблемы
      */
@@ -68,6 +73,7 @@ public class PanelRendering extends GridPanel {
             points.add(new Point(cs.getRandomCoords(), pointSet));
         }
         task = new Task(cs, points);
+        fpsStats = new Stats();
 
     }
 
@@ -81,6 +87,8 @@ public class PanelRendering extends GridPanel {
     @Override
     public void paintImpl(Canvas canvas, CoordinateSystem2i windowCS) {
         task.paint(canvas, windowCS);
+        // рисуем статистику фпс
+        fpsStats.paint(canvas, windowCS, FONT12, padding);
         if (lastInside && lastMove != null)
             task.paintMouse(canvas, windowCS, FONT12, lastWindowCS.getRelativePos(lastMove));
     }
