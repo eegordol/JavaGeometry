@@ -7,6 +7,14 @@ import misc.Misc;
  */
 public class Colors {
     /**
+     * Цвет пересечения
+     */
+    public static final int CROSSED_COLOR = Misc.getColor(200, 0, 255, 255);
+    /**
+     * Цвет разности
+     */
+    public static final int SUBTRACTED_COLOR = Misc.getColor(200, 255, 255, 0);
+    /**
      * цвет фона
      */
     public static final int APP_BACKGROUND_COLOR = Misc.getColor(255, 38, 70, 83);

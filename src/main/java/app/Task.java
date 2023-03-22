@@ -1,6 +1,7 @@
 package app;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.github.humbleui.jwm.MouseButton;
@@ -17,11 +18,26 @@ import panels.PanelLog;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static app.Colors.CROSSED_COLOR;
+import static app.Colors.SUBTRACTED_COLOR;
+
 /**
  * Класс задачи
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 public class Task {
+    /**
+     * Список точек в пересечении
+     */
+    @Getter
+    @JsonIgnore
+    private final ArrayList<Point> crossed;
+    /**
+     * Список точек в разности
+     */
+    @Getter
+    @JsonIgnore
+    private final ArrayList<Point> single;
     /**
      * Флаг, решена ли задача
      */
@@ -45,8 +61,33 @@ public class Task {
      * Решить задачу
      */
     public void solve() {
+        // очищаем списки
+        crossed.clear();
+        single.clear();
+
+        // перебираем пары точек
+        for (int i = 0; i < points.size(); i++) {
+            for (int j = i + 1; j < points.size(); j++) {
+                // сохраняем точки
+                Point a = points.get(i);
+                Point b = points.get(j);
+                // если точки совпадают по положению
+                if (a.pos.equals(b.pos) && !a.pointSet.equals(b.pointSet)) {
+                    if (!crossed.contains(a)){
+                        crossed.add(a);
+                        crossed.add(b);
+                    }
+                }
+            }
+        }
+
+        /// добавляем вс
+        for (Point point : points)
+            if (!crossed.contains(point))
+                single.add(point);
+
         solved = true;
-        PanelLog.warning("Вызван метод solve()\n Пока что решения нет");
+
     }
     /**
      * Отмена решения задачи
@@ -96,6 +137,8 @@ public class Task {
     ) {
         this.ownCS = ownCS;
         this.points = points;
+        this.crossed = new ArrayList<>();
+        this.single = new ArrayList<>();
 
     }
 
@@ -113,8 +156,14 @@ public class Task {
         // создаём перо
         try (var paint = new Paint()) {
             for (Point p : points) {
-                // получаем цвет точки
-                paint.setColor(p.getColor());
+                if (!solved) {
+                    paint.setColor(p.getColor());
+                } else {
+                    if (crossed.contains(p))
+                        paint.setColor(CROSSED_COLOR);
+                    else
+                        paint.setColor(SUBTRACTED_COLOR);
+                }
                 // y-координату разворачиваем, потому что у СК окна ось y направлена вниз,
                 // а в классическом представлении - вверх
                 Vector2i windowPos = windowCS.getCoords(p.pos.x, p.pos.y, ownCS);

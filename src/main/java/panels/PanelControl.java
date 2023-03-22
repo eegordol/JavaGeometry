@@ -176,8 +176,13 @@ public class PanelControl extends GridPanel {
                 window, false, backgroundColor, PANEL_PADDING,
                 6, 7, 3, 6, 3, 1, "Решить",
                 true, true);
-        solve.setOnClick(() -> { if (!PanelRendering.task.isSolved()) {
+        solve.setOnClick(() -> {
+            if (!PanelRendering.task.isSolved()) {
             PanelRendering.task.solve();
+                String s = "Задача решена\n" +
+                        "Пересечений: " + PanelRendering.task.getCrossed().size() / 2 + "\n" +
+                        "Отдельных точек: " + PanelRendering.task.getSingle().size();
+                PanelLog.success(s);
             solve.text = "Сбросить";
         } else {
             cancelTask();
