@@ -69,25 +69,6 @@ public class PanelRendering extends GridPanel {
 
     }
 
-    /**
-     * Обработчик событий
-     * при перегрузке обязателен вызов реализации предка
-     *
-     * @param e событие
-     */
-    @Override
-    public void accept(Event e) {
-        // вызов обработчика предка
-        super.accept(e);
-        // если событие - это клик мышью
-        if (e instanceof EventMouseButton ee) {
-            // если последнее положение мыши сохранено и курсор был внутри
-            if (lastMove != null && lastInside) {
-                // обрабатываем клик по задаче
-                task.click(lastWindowCS.getRelativePos(lastMove), ee.getButton());
-            }
-        }
-    }
 
     /**
      * Метод под рисование в конкретной реализации
@@ -123,6 +104,7 @@ public class PanelRendering extends GridPanel {
         PanelLog.info("load from " + path);
         loadFromFile(path);
     }
+
     /**
      * Загружаем из файла
      *
@@ -137,6 +119,31 @@ public class PanelRendering extends GridPanel {
             PanelLog.success("Файл " + path + " успешно загружен");
         } catch (IOException e) {
             PanelLog.error("Не получилось прочитать файл " + path + "\n" + e);
+        }
+    }
+
+    /**
+     * Обработчик событий
+     * при перегрузке обязателен вызов реализации предка
+     *
+     * @param e событие
+     */
+    @Override
+    public void accept(Event e) {
+        // вызов обработчика предка
+        super.accept(e);
+        // если событие - это клик мышью
+        if (e instanceof EventMouseButton ee) {
+            // если последнее положение мыши сохранено и курсор был внутри
+            if (lastMove != null && lastInside) {
+                // обрабатываем клик по задаче
+                task.click(lastWindowCS.getRelativePos(lastMove), ee.getButton());
+            }
+        } else if (e instanceof EventMouseScroll ee) {
+            if (lastMove != null && lastInside)
+                task.scale(ee.getDeltaY(), lastWindowCS.getRelativePos(lastMove));
+            window.requestFrame();
+
         }
     }
 }
