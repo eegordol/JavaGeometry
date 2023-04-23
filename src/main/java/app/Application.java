@@ -88,11 +88,11 @@ public class Application implements Consumer<Event> {
     /**
      * время последнего нажатия клавиши мыши
      */
+    Date prevEventMouseButtonTime;
     /**
      * Панель информации
      */
     private final PanelInfo panelInfo;
-    Date prevEventMouseButtonTime;
     /**
      * флаг того, что окно развёрнуто на весь экран
      */

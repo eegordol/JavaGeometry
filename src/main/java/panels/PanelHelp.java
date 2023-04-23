@@ -4,7 +4,6 @@ import java.util.*;
 
 import io.github.humbleui.jwm.*;
 import io.github.humbleui.skija.*;
-import io.github.humbleui.skija.RRect;
 import misc.CoordinateSystem2i;
 
 import static app.Colors.HELP_TEXT;
@@ -103,7 +102,7 @@ public class PanelHelp extends GridPanel {
                     canvas.drawTextLine(line, x + (bgWidth - line.getWidth()) / 2, y + HELP_PADDING + capHeight, fg);
                 }
                 // формируем строку с описанием
-                try (TextLine line = TextLine.make(shortcut.text, FONT12);) {
+                try (TextLine line = TextLine.make(shortcut.text, FONT12)) {
                     canvas.drawTextLine(line, x + bgWidth + HELP_PADDING, y + HELP_PADDING + capHeight, fg);
                 }
                 // смещаемся вниз на

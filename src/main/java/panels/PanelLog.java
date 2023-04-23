@@ -1,7 +1,5 @@
 package panels;
 
-import controls.Label;
-import io.github.humbleui.jwm.Event;
 import io.github.humbleui.jwm.Window;
 import io.github.humbleui.skija.Canvas;
 import io.github.humbleui.skija.FontMetrics;
@@ -15,8 +13,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static app.Application.PANEL_PADDING;
-import static app.Colors.PANEL_BACKGROUND_COLOR;
 import static app.Fonts.FONT12;
 
 /**
