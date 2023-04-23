@@ -1,6 +1,7 @@
 package app;
 
 import controls.InputFactory;
+import dialogs.PanelInfo;
 import io.github.humbleui.jwm.*;
 import io.github.humbleui.jwm.skija.EventFrameSkija;
 import io.github.humbleui.skija.Canvas;
@@ -22,6 +23,30 @@ import static app.Colors.*;
  * Класс окна приложения
  */
 public class Application implements Consumer<Event> {
+
+    /**
+     * Режимы работы приложения
+     */
+    public enum Mode {
+
+        /**
+         * Основной режим работы
+         */
+        WORK,
+        /**
+         * Окно информации
+         */
+        INFO,
+        /**
+         * работа с файлами
+         */
+        FILE
+    }
+
+    /**
+     * Текущий режим(по умолчанию рабочий)
+     */
+    public static Mode currentMode = Mode.WORK;
     /**
      * окно приложения
      */
@@ -58,6 +83,10 @@ public class Application implements Consumer<Event> {
     /**
      * время последнего нажатия клавиши мыши
      */
+    /**
+     * Панель информации
+     */
+    private final PanelInfo panelInfo;
     Date prevEventMouseButtonTime;
     /**
      * флаг того, что окно развёрнуто на весь экран
@@ -70,6 +99,8 @@ public class Application implements Consumer<Event> {
     public Application() {
         // создаём окно
         window = App.makeWindow();
+        // панель информации
+        panelInfo = new PanelInfo(window, true, DIALOG_BACKGROUND_COLOR, PANEL_PADDING);
 
         // создаём панель рисования
         panelRendering = new PanelRendering(
@@ -176,11 +207,16 @@ public class Application implements Consumer<Event> {
                 else
                     switch (eventKey.getKey()) {
                         case ESCAPE -> {
+                            // если сейчас основной режим
+                            if (currentMode.equals(Mode.WORK)) {
+                                // закрываем окно
                                 window.close();
                                 // завершаем обработку, иначе уже разрушенный контекст
                                 // будет передан панелям
                                 return;
-
+                            } else if (currentMode.equals(Mode.INFO)) {
+                                currentMode = Mode.WORK;
+                            }
                         }
                         case TAB -> InputFactory.nextTab();
                     }
@@ -206,6 +242,16 @@ public class Application implements Consumer<Event> {
         panelControl.accept(e);
         panelRendering.accept(e);
         panelLog.accept(e);
+        switch (currentMode) {
+            case INFO -> panelInfo.accept(e);
+            case FILE -> {}
+            case WORK -> {
+                // передаём события на обработку панелям
+                panelControl.accept(e);
+                panelRendering.accept(e);
+                panelLog.accept(e);
+            }
+        }
     }
 
     /**
@@ -224,6 +270,12 @@ public class Application implements Consumer<Event> {
         panelControl.paint(canvas, windowCS);
         panelLog.paint(canvas, windowCS);
         panelHelp.paint(canvas, windowCS);
+        // рисуем диалоги
+        switch (currentMode) {
+            case INFO -> panelInfo.paint(canvas, windowCS);
+            case FILE -> {}
+
+        }
         canvas.restore();
     }
 }

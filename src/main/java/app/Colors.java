@@ -7,6 +7,10 @@ import misc.Misc;
  */
 public class Colors {
     /**
+     * Цвет заливки панели
+     */
+    public static final int DIALOG_BACKGROUND_COLOR = Misc.getColor(230, 70, 38, 83);
+    /**
      * Цвет текста
      */
     public static final int HELP_TEXT = Misc.getColor(255, 255, 255, 255);
